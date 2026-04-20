@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sergey T. — Senior DevOps Engineer</title>
+<meta name="description" content="Senior DevOps Engineer · Managed Kubernetes, CI/CD, Observability, MLOps. Прямая работа с техническими фаундерами и CTO.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070B0A;
+    --bg-2: #0B100E;
+    --surface: #0F1513;
+    --surface-2: #141B18;
+    --surface-3: #1A2320;
+    --accent: #2DFF9B;
+    --accent-dim: #1FB36C;
+    --accent-glow: rgba(45, 255, 155, 0.14);
+    --accent-soft: rgba(45, 255, 155, 0.06);
+    --cyan: #7AE0FF;
+    --amber: #FFC56B;
+    --pink: #FF6B9E;
+    --text: #C8D4D1;
+    --text-dim: #8B9C97;
+    --muted: #4A5E59;
+    --border: #1E2E2A;
+    --border-strong: #2A3D38;
+    --heading: #F0F7F4;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.65;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Grid texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at 50% 30%, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 30%, transparent 80%);
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(900px 600px at 85% -10%, var(--accent-glow), transparent 60%),
+                radial-gradient(700px 500px at -10% 120%, rgba(122, 224, 255, 0.05), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ============ NAV ============ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px clamp(20px, 4vw, 48px);
+    background: rgba(7, 11, 10, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-logo .prompt { color: var(--accent); }
+  .nav-logo .blink-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links .num { color: var(--muted); margin-right: 6px; }
+
+  .nav-cta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 8px 14px;
+    border-radius: 3px;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all .2s;
+    box-shadow: 0 0 0 1px var(--accent), 0 0 20px rgba(45,255,155,.25);
+  }
+  .nav-cta:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 0 0 1px #fff, 0 0 24px rgba(255,255,255,.3); }
+
+  @media (max-width: 820px) {
+    .nav-links { display: none; }
+  }
+
+  /* ============ LAYOUT ============ */
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px);
+  }
+
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-pad {
+    padding: clamp(72px, 10vw, 120px) 0;
+  }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kicker::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+  .kicker.center { justify-content: center; }
+
+  h2 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(32px, 5.5vw, 56px);
+    font-weight: 800;
+    color: var(--heading);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin-bottom: 56px;
+    text-wrap: balance;
+  }
+
+  .section-head {
+    max-width: 780px;
+    margin-bottom: 64px;
+  }
+
+  .section-head h2 { margin-bottom: 16px; }
+  .section-head p {
+    color: var(--text-dim);
+    font-size: 17px;
+    line-height: 1.6;
+    max-width: 640px;
+  }
+
+  /* ============ HERO ============ */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 128px 0 88px;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 72px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--surface);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+  }
+  .hero-status .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  h1 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(56px, 10vw, 112px);
+    font-weight: 800;
+    line-height: 0.9;
+    color: var(--heading);
+    letter-spacing: -0.035em;
+    margin-bottom: 0;
+  }
+  h1 .period {
+    color: var(--accent);
+    text-shadow: 0 0 24px var(--accent-glow);
+  }
+
+  .hero-title-line {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(12px, 2vw, 20px);
+    flex-wrap: wrap;
+  }
+
+  .hero-role {
+    margin-top: 24px;
+    margin-bottom: 28px;
+    padding: 12px 16px;
+    border-left: 2px solid var(--accent);
+    background: var(--accent-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+    max-width: fit-content;
+  }
+  .hero-role .comment { color: var(--muted); }
+
+  .hero-pitch {
+    font-size: clamp(17px, 1.8vw, 19px);
+    color: var(--text);
+    line-height: 1.55;
+    max-width: 520px;
+    margin-bottom: 40px;
+    font-weight: 400;
+  }
+  .hero-pitch strong {
+    color: var(--heading);
+    font-weight: 500;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 3px;
+    transition: all 0.22s cubic-bezier(.2,.7,.3,1);
+    cursor: pointer;
+    font-weight: 600;
+    border: 0;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 0 1px var(--accent), 0 8px 24px -8px rgba(45,255,155,.5);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px var(--accent), 0 14px 32px -10px rgba(45,255,155,.7);
+  }
+  .btn-primary .arrow { transition: transform .25s; }
+  .btn-primary:hover .arrow { transform: translateX(3px); }
+
+  .btn-outline {
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    background: var(--surface);
+  }
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateY(-2px);
+  }
+
+  .btn .icon {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* TERMINAL */
+  .terminal {
+    background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,.8),
+                0 0 0 1px rgba(45,255,155,.05),
+                0 0 60px -20px rgba(45,255,155,.18);
+    position: relative;
+  }
+  .terminal::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 10px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(45,255,155,.4), transparent 40%, transparent 60%, rgba(45,255,155,.15));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: .5;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot.r { background: #FF5F57; }
+  .dot.y { background: #FEBC2E; }
+  .dot.g { background: #28C840; }
+  .terminal-title {
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+  .terminal-title .live-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-right: 6px;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  .terminal-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 6px 10px 0;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .term-tab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom: none;
+    padding: 6px 12px;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    transition: all .15s;
+    letter-spacing: 0.02em;
+  }
+  .term-tab:hover { color: var(--text); }
+  .term-tab.active {
+    background: var(--surface);
+    color: var(--accent);
+    border-color: var(--border);
+    border-bottom-color: var(--surface);
+    margin-bottom: -1px;
+  }
+
+  .terminal-body {
+    padding: 18px 20px 20px;
+    min-height: 300px;
+    max-height: 340px;
+    overflow: hidden;
+  }
+
+  .t-line { white-space: pre-wrap; word-break: break-word; }
+  .t-line + .t-line { margin-top: 2px; }
+  .t-prompt-sym { color: var(--accent); font-weight: 600; }
+  .t-user { color: var(--cyan); }
+  .t-at { color: var(--muted); }
+  .t-host { color: var(--amber); }
+  .t-path { color: var(--text-dim); }
+  .t-cmd { color: var(--heading); font-weight: 500; }
+  .t-flag { color: var(--text-dim); }
+  .t-out { color: var(--text-dim); }
+  .t-ok { color: var(--accent); }
+  .t-warn { color: var(--amber); }
+  .t-val { color: var(--cyan); }
+  .t-str { color: var(--amber); }
+  .t-comment { color: var(--muted); font-style: italic; }
+  .t-cursor {
+    display: inline-block;
+    width: 7px; height: 15px;
+    background: var(--accent);
+    vertical-align: -3px;
+    margin-left: 2px;
+    animation: blink 1.05s steps(2) infinite;
+    box-shadow: 0 0 8px var(--accent);
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .t-spacer { height: 8px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 28px 0;
+    margin-top: 0;
+  }
+  .stats-inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat {
+    padding: 8px clamp(12px, 2vw, 24px);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    color: var(--heading);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .stat-num .acc {
+    color: var(--accent);
+    font-size: 0.7em;
+    vertical-align: 0.15em;
+    margin-left: 2px;
+  }
+  .stat-num .unit {
+    font-size: 0.5em;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-left: 4px;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 760px) {
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .stat { padding: 16px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stat:nth-child(even) { border-right: none; }
+    .stat:nth-child(n+3) { border-bottom: none; }
+  }
+
+  /* ============ SKILLS ============ */
+  #skills { background: var(--bg-2); }
+
+  .skills-terminal {
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: 0 30px 80px -40px rgba(0,0,0,.7);
+  }
+
+  .skills-terminal .terminal-bar { padding: 12px 16px; }
+
+  .skills-body {
+    padding: 22px 26px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    min-height: 400px;
+  }
+
+  .skills-prompt-line {
+    margin-bottom: 22px;
+    color: var(--text);
+  }
+  .skills-prompt-line .t-cmd { color: var(--heading); }
+
+  .skills-output-head {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: 90px 180px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+    transition: background .15s;
+  }
+  .skill-row:hover {
+    background: var(--accent-soft);
+  }
+  .skill-row:last-child { border-bottom: none; }
+
+  .skill-perms {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+  .skill-perms .d { color: var(--accent-dim); }
+  .skill-perms .r { color: var(--text-dim); }
+  .skill-perms .w { color: var(--text-dim); }
+  .skill-perms .x { color: var(--accent); }
+
+  .skill-cat-name {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .skill-cat-name::before { content: ''; }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .skill-tag {
+    color: var(--text);
+    padding: 2px 0;
+    position: relative;
+    transition: color .15s;
+    cursor: default;
+  }
+  .skill-tag:hover { color: var(--accent); }
+  .skill-tag + .skill-tag::before {
+    content: '·';
+    color: var(--muted);
+    margin-right: 10px;
+    margin-left: -10px;
+  }
+  .skill-tag.key {
+    color: var(--heading);
+    font-weight: 500;
+  }
+  .skill-tag.key::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  .skills-footer-line {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+  }
+
+  @media (max-width: 760px) {
+    .skills-body { padding: 18px 16px 8px; font-size: 12px; }
+    .skill-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      padding: 14px 0;
+    }
+    .skill-perms { display: none; }
+  }
+
+  /* ============ EXPERIENCE ============ */
+  .exp-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .exp-card {
+    position: relative;
+    background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+    transition: all .25s;
+    overflow: hidden;
+  }
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--border-strong);
+    transition: background .25s;
+  }
+  .exp-card:hover {
+    border-color: var(--border-strong);
+    transform: translateX(4px);
+  }
+  .exp-card:hover::before { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+
+  .exp-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .exp-role {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--heading);
+    letter-spacing: -0.01em;
+  }
+
+  .exp-meta {
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .exp-type {
+    color: var(--accent);
+    padding: 3px 9px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: var(--accent-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+
+  .exp-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .exp-period .sep { color: var(--accent); margin: 0 6px; }
+
+  .exp-summary {
+    font-size: 15.5px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    max-width: 780px;
+  }
+
+  .exp-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .exp-metric {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 11px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+  .exp-metric strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .exp-metric::before {
+    content: '▸';
+    color: var(--accent);
+    font-size: 9px;
+  }
+
+  @media (max-width: 620px) {
+    .exp-card { padding: 22px 20px; }
+    .exp-role { font-size: 19px; }
+  }
+
+  /* ============ SERVICES ============ */
+  #services { background: var(--bg-2); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .svc {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    transition: all .25s;
+    overflow: hidden;
+  }
+  .svc::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle at top right, var(--accent-glow), transparent 70%);
+    opacity: 0;
+    transition: opacity .3s;
+    pointer-events: none;
+  }
+  .svc:hover { border-color: var(--border-strong); transform: translateY(-4px); }
+  .svc:hover::after { opacity: 1; }
+
+  .svc.featured {
+    border-color: var(--accent-dim);
+    background: linear-gradient(180deg, var(--surface) 0%, rgba(45,255,155,0.03) 100%);
+  }
+  .svc.featured::after { opacity: 0.6; }
+
+  .svc-badge {
+    position: absolute;
+    top: 18px; right: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    padding: 4px 8px;
+    border-radius: 3px;
+    background: var(--accent-soft);
+  }
+
+  .svc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 24px;
+  }
+
+  .svc-name {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--heading);
+    letter-spacing: -0.015em;
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+
+  .svc-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .svc-desc {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .svc-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+    flex: 1;
+  }
+  .svc-list li {
+    font-size: 13.5px;
+    color: var(--text);
+    padding-left: 22px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .svc-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.55em;
+    width: 12px; height: 1px;
+    background: var(--accent);
+  }
+  .svc-list li::after {
+    content: '';
+    position: absolute;
+    left: 10px; top: calc(0.55em - 2px);
+    width: 5px; height: 5px;
+    border-top: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+    transform: rotate(45deg);
+  }
+
+  .svc-price {
+    padding-top: 20px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .svc-price-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 4px;
+  }
+  .svc-price-val {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    color: var(--heading);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .svc-price-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+  .svc-timeline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: right;
+    letter-spacing: 0.02em;
+  }
+  .svc-timeline strong { color: var(--accent); font-weight: 500; }
+
+  .svc-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  @media (max-width: 960px) {
+    .services-grid { grid-template-columns: 1fr; gap: 14px; }
+  }
+
+  /* ============ CONTACT ============ */
+  #contact {
+    position: relative;
+    overflow: hidden;
+  }
+  #contact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(700px 400px at 50% 100%, var(--accent-glow), transparent 60%);
+    pointer-events: none;
+  }
+
+  .contact-inner {
+    position: relative;
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .contact-inner h2 {
+    font-size: clamp(40px, 7vw, 80px);
+    line-height: 0.95;
+    margin-bottom: 24px;
+  }
+  .contact-inner h2 .fade { color: var(--muted); }
+  .contact-inner h2 .accent { color: var(--accent); text-shadow: 0 0 30px var(--accent-glow); }
+
+  .contact-sub {
+    font-size: 17px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 48px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contact-methods {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all .22s cubic-bezier(.2,.7,.3,1);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    min-width: 240px;
+    justify-content: flex-start;
+  }
+  .contact-btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 14px 40px -12px rgba(45,255,155,.55);
+    font-weight: 600;
+  }
+  .contact-btn.primary:hover {
+    background: #fff;
+    border-color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 1px #fff, 0 18px 44px -12px rgba(255,255,255,.35);
+  }
+  .contact-btn:not(.primary):hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateY(-3px);
+  }
+
+  .contact-btn-icon {
+    width: 22px; height: 22px;
+    flex-shrink: 0;
+  }
+  .contact-btn-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    line-height: 1.2;
+  }
+  .contact-btn-label .small {
+    font-size: 10px;
+    opacity: 0.7;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .contact-btn-label .big {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .contact-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .contact-note span { display: inline-flex; align-items: center; gap: 6px; }
+  .contact-note .led {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+  }
+
+  @media (max-width: 620px) {
+    .contact-btn { min-width: 100%; }
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 24px clamp(20px, 4vw, 48px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer .right { letter-spacing: 0.05em; }
+
+  /* ============ REVEAL ============ */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.shown { opacity: 1; transform: none; }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    #hero { padding: 112px 0 72px; }
+    h1 { font-size: clamp(52px, 14vw, 96px); }
+    .section-pad { padding: 72px 0; }
+    h2 { margin-bottom: 40px; }
+    .terminal-body { min-height: 260px; max-height: 300px; padding: 14px 16px; font-size: 11.5px; }
+    .exp-card { padding: 22px 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-status { font-size: 10px; }
+    h1 { letter-spacing: -0.04em; }
+    .hero-pitch { font-size: 16px; }
+    .btn { padding: 12px 18px; font-size: 11px; }
+  }
+
+  /* Selection */
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  /* ============ EDIT MODE ============ */
+  .edit-fab {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,.6);
+  }
+  .edit-fab:hover { border-color: var(--accent); color: var(--accent); }
+  .edit-fab.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 14px 36px -10px rgba(45,255,155,.55);
+  }
+  .edit-fab .icon { width: 14px; height: 14px; }
+
+  .edit-hint {
+    position: fixed;
+    right: 20px;
+    bottom: 72px;
+    z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    max-width: 280px;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all .2s;
+    pointer-events: none;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,.6);
+  }
+  .edit-hint.show { opacity: 1; transform: none; }
+  .edit-hint strong { color: var(--accent); }
+  .edit-hint .reset {
+    color: var(--text-dim);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    pointer-events: auto;
+    margin-top: 6px;
+    display: inline-block;
+  }
+  .edit-hint .reset:hover { color: var(--accent); }
+
+  body.editing [data-edit] {
+    outline: 1px dashed rgba(45,255,155,.4);
+    outline-offset: 3px;
+    border-radius: 2px;
+    cursor: text;
+    transition: outline-color .15s, background .15s;
+  }
+  body.editing [data-edit]:hover {
+    outline-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  body.editing [data-edit]:focus {
+    outline: 1px solid var(--accent);
+    background: var(--accent-soft);
+    box-shadow: 0 0 0 3px rgba(45,255,155,.1);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <span class="blink-dot"></span>
+    <span><span class="prompt">~/</span>sergey-t</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#skills"><span class="num">01.</span>stack</a></li>
+    <li><a href="#experience"><span class="num">02.</span>cases</a></li>
+    <li><a href="#services"><span class="num">03.</span>services</a></li>
+    <li><a href="#contact"><span class="num">04.</span>contact</a></li>
+  </ul>
+  <a href="https://t.me/sersert" target="_blank" rel="noopener" class="nav-cta">@sersert →</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-status">
+        <span class="status-dot"></span>
+        Доступен для новых клиентов · Q2 2026
+      </div>
+
+      <h1>
+        <span class="hero-title-line">
+          <span>Sergey&nbsp;T<span class="period">.</span></span>
+        </span>
+      </h1>
+
+      <div class="hero-role">
+        <span class="comment">// role:</span> Senior DevOps&nbsp;/&nbsp;MLOps Engineer&nbsp;/&nbsp;Tech Lead
+      </div>
+
+      <p class="hero-pitch">
+        Строю <strong>fault-tolerant инфраструктуру</strong>, CI/CD и observability для продуктовых команд. Работаю напрямую с фаундерами и CTO — без прослойки из менеджеров и рекрутеров.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://t.me/sersert" target="_blank" rel="noopener" class="btn btn-primary">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.5 3.5 2.5 10.8c-.9.3-.9 1.5.1 1.8l4.6 1.5 1.7 5.5c.2.6 1 .7 1.4.2l2.7-2.9 4.8 3.5c.6.4 1.4.1 1.5-.6l3-14.4c.2-.8-.6-1.5-1.3-1.2Z" fill="currentColor"/>
+            <path d="m9 14.5 8.5-7.5-6.5 8.1" stroke="var(--bg)" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          Написать в Telegram
+          <span class="arrow">→</span>
+        </a>
+        <a href="/cdn-cgi/l/email-protection#b6c5d3c4d1d3cf98c2dfdbdfc4cfd7d3c08580f6d1dbd7dfda98d5d9db" class="btn btn-outline">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          EMAIL
+        </a>
+      </div>
+    </div>
+
+    <!-- Interactive Terminal -->
+    <div class="terminal" id="heroTerm">
+      <div class="terminal-bar">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+        <span class="terminal-title"><span class="live-dot"></span>sergey@prod-bastion — zsh</span>
+      </div>
+      <div class="terminal-tabs">
+        <button class="term-tab active" data-cmd="nodes">kubectl</button>
+        <button class="term-tab" data-cmd="uptime">uptime</button>
+        <button class="term-tab" data-cmd="deploy">deploy.sh</button>
+        <button class="term-tab" data-cmd="whoami">whoami</button>
+      </div>
+      <div class="terminal-body" id="termBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS BAR ============ -->
+<div class="stats-bar">
+  <div class="wrap stats-inner">
+    <div class="stat">
+      <div class="stat-num">7<span class="acc">+</span><span class="unit">yrs</span></div>
+      <div class="stat-label">В&nbsp;DevOps с&nbsp;2019</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">99<span class="acc">.95%</span></div>
+      <div class="stat-label">SLA на&nbsp;prod-нагрузке</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">200<span class="acc">+</span></div>
+      <div class="stat-label">Микросервисов в проде</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">80<span class="acc">%</span></div>
+      <div class="stat-label">снизил&nbsp;MTTA&nbsp;в проекте</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SKILLS ============ -->
+<section id="skills" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">01 / stack</div>
+      <h2>Технологии, с&nbsp;которыми работаю</h2>
+      <p>Стек, выверенный годами продакшена. Для каждой задачи подбирается минимально достаточный инструмент — без оверинжиниринга.</p>
+    </div>
+
+    <div class="skills-terminal reveal">
+      <div class="terminal-bar">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+        <span class="terminal-title">~/skills</span>
+      </div>
+      <div class="skills-body">
+        <div class="skills-prompt-line">
+          <span class="t-prompt-sym">❯</span>
+          <span class="t-user">sergey</span><span class="t-at">@</span><span class="t-host">devops</span>
+          <span class="t-path">~/skills</span>
+          <span class="t-cmd">$ ls -la --group-by=category</span>
+        </div>
+
+        <div class="skills-output-head">total 6 &nbsp;·&nbsp; drwxr-xr-x &nbsp;·&nbsp; last indexed: 2026-04-19</div>
+
+        <div class="skill-row">
+          <span class="skill-perms">d<span class="r">r</span><span class="w">w</span><span class="x">x</span><span class="r">r</span>-<span class="x">x</span><span class="r">r</span>-<span class="x">x</span></span>
+          <span class="skill-cat-name">orchestration/</span>
+          <div class="skill-tags">
+            <span class="skill-tag key">Kubernetes</span>
+            <span class="skill-tag key">K3s</span>
+            <span class="skill-tag">Helm</span>
+            <span class="skill-tag">ArgoCD</span>
+            <span class="skill-tag">FluxCD</span>
+            <span class="skill-tag">Longhorn</span>
+            <span class="skill-tag">MetalLB</span>
+            <span class="skill-tag">Traefik</span>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <span class="skill-perms">d<span class="r">r</span><span class="w">w</span><span class="x">x</span><span class="r">r</span>-<span class="x">x</span><span class="r">r</span>-<span class="x">x</span></span>
+          <span class="skill-cat-name">ci-cd/</span>
+          <div class="skill-tags">
+            <span class="skill-tag key">GitLab&nbsp;CI</span>
+            <span class="skill-tag key">GitHub&nbsp;Actions</span>
+            <span class="skill-tag">Jenkins</span>
+            <span class="skill-tag">Harbor</span>
+            <span class="skill-tag">Nexus</span>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <span class="skill-perms">d<span class="r">r</span><span class="w">w</span><span class="x">x</span><span class="r">r</span>-<span class="x">x</span><span class="r">r</span>-<span class="x">x</span></span>
+          <span class="skill-cat-name">observability/</span>
+          <div class="skill-tags">
+            <span class="skill-tag key">Prometheus</span>
+            <span class="skill-tag key">Grafana</span>
+            <span class="skill-tag">VictoriaMetrics</span>
+            <span class="skill-tag">Loki</span>
+            <span class="skill-tag">ELK&nbsp;Stack</span>
+            <span class="skill-tag">Alertmanager</span>
+            <span class="skill-tag">Splunk</span>
+            <span class="skill-tag">OTel</span>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <span class="skill-perms">d<span class="r">r</span><span class="w">w</span><span class="x">x</span><span class="r">r</span>-<span class="x">x</span><span class="r">r</span>-<span class="x">x</span></span>
+          <span class="skill-cat-name">iac/</span>
+          <div class="skill-tags">
+            <span class="skill-tag key">Terraform</span>
+            <span class="skill-tag key">Terragrunt</span>
+            <span class="skill-tag">Ansible</span>
+            <span class="skill-tag">Kustomize</span>
+            <span class="skill-tag">GitOps</span>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <span class="skill-perms">d<span class="r">r</span><span class="w">w</span><span class="x">x</span><span class="r">r</span>-<span class="x">x</span><span class="r">r</span>-<span class="x">x</span></span>
+          <span class="skill-cat-name">data-ml/</span>
+          <div class="skill-tags">
+            <span class="skill-tag key">Airflow</span>
+            <span class="skill-tag key">MLflow</span>
+            <span class="skill-tag">Spark</span>
+            <span class="skill-tag">Trino</span>
+            <span class="skill-tag">Iceberg</span>
+            <span class="skill-tag">Superset</span>
+            <span class="skill-tag">ClickHouse</span>
+            <span class="skill-tag">JupyterHub</span>
+          </div>
+        </div>
+
+        <div class="skill-row">
+          <span class="skill-perms">d<span class="r">r</span><span class="w">w</span><span class="x">x</span><span class="r">r</span>-<span class="x">x</span><span class="r">r</span>-<span class="x">x</span></span>
+          <span class="skill-cat-name">security/</span>
+          <div class="skill-tags">
+            <span class="skill-tag key">Vault</span>
+            <span class="skill-tag key">Keycloak</span>
+            <span class="skill-tag">OIDC&nbsp;/&nbsp;LDAP</span>
+            <span class="skill-tag">cert-manager</span>
+            <span class="skill-tag">Kyverno</span>
+          </div>
+        </div>
+
+        <div class="skills-footer-line">
+          <span class="t-prompt-sym">❯</span> <span class="t-comment"># + PostgreSQL, Redis, MinIO, Velero, etcd, RabbitMQ и остальное — спрашивайте</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">02 / cases</div>
+      <h2>Мой опыт&nbsp; — без&nbsp;названий, с&nbsp;цифрами</h2>
+      <p>Под NDA, потому что проекты анонимизированы по индустрии. На коротком созвоне могу рассказать детали.</p>
+    </div>
+
+    <div class="exp-grid" id="expGrid">
+
+      <article class="exp-card reveal">
+        <div class="exp-top">
+          <div>
+            <div class="exp-role" data-edit="role">ML Platform Engineer</div>
+            <div class="exp-meta">
+              <span class="exp-type" data-edit="type">Data Platform Team</span>
+              <span data-edit="tag">· ML&nbsp;инфра с&nbsp;нуля</span>
+            </div>
+          </div>
+          <div class="exp-period" data-edit="period">2025 <span class="sep">→</span> present</div>
+        </div>
+        <p class="exp-summary" data-edit="summary">
+          Инженер Data Platform: строю ML-платформу с нуля на Kubernetes — continuous training, online-inference для системы рекомендаций, end-to-end пайплайны от ingestion до деплоя. GitOps-подход (ArgoCD + Helm + Terraform), интеграция со стеком данных (S3, Iceberg, Trino, Spark, Snowplow).
+        </p>
+        <div class="exp-metrics" data-edit-group="metrics">
+          <span class="exp-metric" data-edit="metric">online inference <strong>100k+ rps</strong></span>
+          <span class="exp-metric" data-edit="metric">model&nbsp;&amp;&nbsp;data versioning</span>
+          <span class="exp-metric" data-edit="metric">drift detection + monitoring</span>
+          <span class="exp-metric" data-edit="metric">GitOps: ArgoCD · Helm · Terraform</span>
+        </div>
+      </article>
+
+      <article class="exp-card reveal">
+        <div class="exp-top">
+          <div>
+            <div class="exp-role" data-edit="role">Senior DevOps Engineer</div>
+            <div class="exp-meta">
+              <span class="exp-type" data-edit="type">E-commerce Marketplace</span>
+              <span data-edit="tag">· k8s кластера 100+ нод</span>
+            </div>
+          </div>
+          <div class="exp-period" data-edit="period">2023 <span class="sep">→</span> 2025</div>
+        </div>
+        <p class="exp-summary" data-edit="summary">
+          Геораспределенная multi-cluster инфраструктура одного из крупнейших российских маркетплейсов. Кластера от 6 до 100+ нод в кластере, 200+ микросервисов, пики 300k+ rps. CI/CD, observability. С нуля построил команду и отдел технического мониторинга: внедрил инцидент-менеджмент, Grafana OnCall с эскалацией и звонками на critical, покрыл инфраструктуру и сервисы разработчиков алертами, обучил смежные команды.
+        </p>
+        <div class="exp-metrics" data-edit-group="metrics">
+          <span class="exp-metric" data-edit="metric"><strong>99.95%</strong>&nbsp;uptime SLA</span>
+          <span class="exp-metric" data-edit="metric">release cycle <strong>−60%</strong></span>
+          <span class="exp-metric" data-edit="metric">MTTR <strong>−35%</strong></span>
+          <span class="exp-metric" data-edit="metric">Tech Lead Monitoring</span>
+        </div>
+      </article>
+
+      <article class="exp-card reveal">
+        <div class="exp-top">
+          <div>
+            <div class="exp-role" data-edit="role">DevOps Engineer</div>
+            <div class="exp-meta">
+              <span class="exp-type" data-edit="type">AR / ML Startup</span>
+              <span data-edit="tag">· инфра с&nbsp;нуля для 5 проектов</span>
+            </div>
+          </div>
+          <div class="exp-period" data-edit="period">2022 <span class="sep">→</span> 2023</div>
+        </div>
+        <p class="exp-summary" data-edit="summary">
+          Спроектировал и выстроил инфраструктуру для AR-стартапа с ML окружением. От идеи до 15 Baremetal серверов в т.ч. GPU. Self-hosted всё: от registry до Airflow. Параллельно настроил CI/CD для Unity-приложений (iOS/Android) и автопубликацию в TestFlight. Для всех проектов настроил dev + prod env.
+        </p>
+        <div class="exp-metrics" data-edit-group="metrics">
+          <span class="exp-metric" data-edit="metric">Kubernetes + Airflow + GPU</span>
+          <span class="exp-metric" data-edit="metric">self-hosted GitLab</span>
+        </div>
+      </article>
+
+      <article class="exp-card reveal">
+        <div class="exp-top">
+          <div>
+            <div class="exp-role" data-edit="role">DevOps Engineer</div>
+            <div class="exp-meta">
+              <span class="exp-type" data-edit="type">Fintech</span>
+              <span data-edit="tag">· Customer Data Platform</span>
+            </div>
+          </div>
+          <div class="exp-period" data-edit="period">2022 <span class="sep">→</span> 2023</div>
+        </div>
+        <p class="exp-summary" data-edit="summary">
+          Инфраструктура CDP в крупном банке: администрирование ClickHouse и Greenplum на больших объёмах (40TB данных), доработка Airflow, внедрение Superset в прод k8s. Проводил технические собеседования и участвовал в архитектурных ревью.
+        </p>
+        <div class="exp-metrics" data-edit-group="metrics">
+          <span class="exp-metric" data-edit="metric">ClickHouse + Greenplum</span>
+          <span class="exp-metric" data-edit="metric">Airflow&nbsp;DAGs на&nbsp;prod</span>
+          <span class="exp-metric" data-edit="metric">Superset в&nbsp;ArgoCD</span>
+          <span class="exp-metric" data-edit="metric">k8s в&nbsp;enterprise-контуре</span>
+        </div>
+      </article>
+
+      <article class="exp-card reveal">
+        <div class="exp-top">
+          <div>
+            <div class="exp-role" data-edit="role">DevOps Engineer</div>
+            <div class="exp-meta">
+              <span class="exp-type" data-edit="type">MLOps Consulting</span>
+              <span data-edit="tag">· CI/CD для&nbsp;ML&nbsp;моделей</span>
+            </div>
+          </div>
+          <div class="exp-period" data-edit="period">2021 <span class="sep">→</span> 2022</div>
+        </div>
+        <p class="exp-summary" data-edit="summary">
+          Консалтинг по MLOps: единый API Gateway на Keycloak / OIDC / LDAP / Kerberos, MLflow + JupyterLab платформа, CI/CD для ML-моделей на Jenkins. Разворачивал мониторинг на VictoriaMetrics и kube-prometheus-stack в нескольких кластерах клиентов.
+        </p>
+        <div class="exp-metrics" data-edit-group="metrics">
+          <span class="exp-metric" data-edit="metric">MLflow + JupyterHub</span>
+          <span class="exp-metric" data-edit="metric">Keycloak SSO</span>
+          <span class="exp-metric" data-edit="metric">Jenkins для ML pipelines</span>
+          <span class="exp-metric" data-edit="metric">VictoriaMetrics + Splunk</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="services" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">03 / services</div>
+      <h2>Как со&nbsp;мной работать</h2>
+      <p>Три формата сотрудничества — выберите, что подходит под вашу задачу. Всё напрямую.</p>
+    </div>
+
+    <div class="services-grid">
+
+      <div class="svc reveal">
+        <div class="svc-num">// pkg.01</div>
+        <div class="svc-name">Infrastructure Audit</div>
+        <div class="svc-sub">Fixed price · one-off</div>
+        <p class="svc-desc">
+          Разбор вашей текущей инфраструктуры: где что сломается, что тащит бюджет, где узкие места и риски. На выходе — документ с приоритетами и roadmap фиксов.
+        </p>
+        <ul class="svc-list">
+          <li>Architecture review: k8s, CI/CD, observability, IaC</li>
+          <li>Security posture: secrets, RBAC, network policies</li>
+          <li>Cost analysis и очевидные места оптимизации</li>
+          <li>Приоритизированный backlog с оценками</li>
+        </ul>
+        <div class="svc-price">
+          <div>
+            <div class="svc-price-label">from</div>
+            <div class="svc-price-val">$2.4k <span class="svc-price-unit">fixed</span></div>
+          </div>
+          <div class="svc-timeline">
+            <strong>1–2 недели</strong><br>
+            итоговый отчёт
+          </div>
+        </div>
+        <a href="https://t.me/sersert?text=Audit%3A%20%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82" target="_blank" rel="noopener" class="btn btn-outline svc-cta">Обсудить аудит →</a>
+      </div>
+
+      <div class="svc featured reveal">
+        <div class="svc-badge">Most popular</div>
+        <div class="svc-num">// pkg.02</div>
+        <div class="svc-name">DevOps on Retainer</div>
+        <div class="svc-sub">Monthly · part-time CTO/DevOps</div>
+        <p class="svc-desc">
+          Ежемесячный контракт, когда у вас нет своего DevOps и не нужен full-time. Работаю с вашим прод и дев контурами, выкатываю фичи, разгребаю инциденты, развиваю инфру — как часть команды.
+        </p>
+        <ul class="svc-list">
+          <li>On-call и инцидент-менеджмент в рабочие часы</li>
+          <li>Платформа платформы: обновления k8s, upgrade-path</li>
+          <li>Наставничество для ваших инженеров</li>
+          <li>Telegram в&nbsp;рабочие часы (UTC+3)</li>
+          <li>SLA прописан контрактом</li>
+        </ul>
+        <div class="svc-price">
+          <div>
+            <div class="svc-price-label">from</div>
+            <div class="svc-price-val">$3.5k <span class="svc-price-unit">/&nbsp;mo</span></div>
+          </div>
+          <div class="svc-timeline">
+            <strong>от 3 мес.</strong><br>
+            гибкие часы
+          </div>
+        </div>
+        <a href="https://t.me/sersert?text=Retainer%3A%20%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82" target="_blank" rel="noopener" class="btn btn-primary svc-cta">Запросить слот →</a>
+      </div>
+
+      <div class="svc reveal">
+        <div class="svc-num">// pkg.03</div>
+        <div class="svc-name">One-off Setup</div>
+        <div class="svc-sub">Project-based · FIXED SCOPE</div>
+        <p class="svc-desc">
+          Внедрить конкретный кусок инфры под ключ: поднять k8s, настроить CI/CD, поставить мониторинг. Вы платите за результат — работающий стенд и документацию.
+        </p>
+        <ul class="svc-list">
+          <li>k8s&nbsp;/&nbsp;k3s cluster&nbsp;+ GitOps (ArgoCD&nbsp;/&nbsp;FluxCD)</li>
+          <li>CI/CD: GitLab CI или GitHub Actions end-to-end</li>
+          <li>Observability: Prometheus + Grafana + Loki</li>
+          <li>Handoff: runbooks, архитектурные схемы</li>
+        </ul>
+        <div class="svc-price">
+          <div>
+            <div class="svc-price-label">from</div>
+            <div class="svc-price-val">$4k <span class="svc-price-unit">project</span></div>
+          </div>
+          <div class="svc-timeline">
+            <strong>2–6 недель</strong><br>
+            в зависимости от скоупа
+          </div>
+        </div>
+        <a href="https://t.me/sersert?text=Setup%3A%20%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82" target="_blank" rel="noopener" class="btn btn-outline svc-cta">Прислать ТЗ →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="section-pad">
+  <div class="wrap contact-inner reveal">
+    <div class="kicker center">04 / contact</div>
+    <h2>
+      <span class="fade">$</span> <span class="accent">./ping</span><br>
+      sergey<span class="accent">.</span>t
+    </h2>
+    <p class="contact-sub">
+      Отвечаю в Telegram в течение пары часов в рабочее время. Бесплатный 30-минутный созвон, чтобы понять, могу ли я вам помочь — без обязательств.
+    </p>
+
+    <div class="contact-methods">
+      <a href="https://t.me/sersert" target="_blank" rel="noopener" class="contact-btn primary">
+        <svg class="contact-btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21.5 3.5 2.5 10.8c-.9.3-.9 1.5.1 1.8l4.6 1.5 1.7 5.5c.2.6 1 .7 1.4.2l2.7-2.9 4.8 3.5c.6.4 1.4.1 1.5-.6l3-14.4c.2-.8-.6-1.5-1.3-1.2Z" fill="currentColor"/>
+          <path d="m9 14.5 8.5-7.5-6.5 8.1" stroke="var(--bg)" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="contact-btn-label">
+          <span class="small">Telegram · primary</span>
+          <span class="big">@sersert</span>
+        </span>
+      </a>
+
+      <a href="/cdn-cgi/l/email-protection#cebdabbca9abb7e0baa7a3a7bcb7afabb8fdf88ea9a3afa7a2e0ada1a3" class="contact-btn">
+        <svg class="contact-btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="contact-btn-label">
+          <span class="small">Email</span>
+          <span class="big"><span class="__cf_email__" data-cfemail="84f7e1f6e3e1fdaaf0ede9edf6fde5e1f2b7b2c4e3e9e5ede8aae7ebe9">sergey.timiryaev36@gmail.com</span></span>
+        </span>
+      </a>
+    </div>
+
+    <div class="contact-note">
+      <span><span class="led"></span>Доступен Q2&nbsp;2026</span>
+      <span>·</span>
+      <span>UTC+3 · Remote</span>
+      <span>·</span>
+      <span>NDA ok</span>
+    </div>
+  </div>
+</section>
+
+<!-- Edit FAB -->
+<button class="edit-fab" id="editFab" aria-label="Toggle edit mode">
+  <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 20h4l10-10-4-4L4 16v4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="m14 6 4 4" stroke="currentColor" stroke-width="1.5"/>
+  </svg>
+  <span class="edit-fab-label">edit</span>
+</button>
+<div class="edit-hint" id="editHint">
+  <div><strong>Режим редактирования.</strong> Кликайте по тексту в карточках «Cases» и правьте inline. Изменения сохраняются в браузере.</div>
+  <a class="reset" id="editReset">Сбросить изменения</a>
+</div>
+
+<footer>
+  <div class="left">© 2026 Sergey T. · built with vim &amp; coffee</div>
+  <div class="right">v2.0 · last deploy: 2026-04-19</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script>
+  /* ============ HERO TERMINAL ANIMATIONS ============ */
+  const scripts = {
+    nodes: [
+      { type: 'cmd',  text: 'kubectl get nodes -o wide' },
+      { type: 'hdr',  text: 'NAME           STATUS   ROLES           AGE    VERSION' },
+      { type: 'node', name: 'prod-ctrl-01', role: 'control-plane', age: '207d' },
+      { type: 'node', name: 'prod-ctrl-02', role: 'control-plane', age: '207d' },
+      { type: 'node', name: 'prod-ctrl-03', role: 'control-plane', age: '207d' },
+      { type: 'node', name: 'prod-w01..w87', role: 'worker',        age: '207d', short: true },
+      { type: 'out',  text: '' },
+      { type: 'cmd',  text: 'echo "90 nodes, 200+ svc, 100k rps peak"' },
+      { type: 'ok',   text: '✓ all systems nominal' },
+    ],
+    uptime: [
+      { type: 'cmd', text: 'curl -s prom.internal/sla | jq' },
+      { type: 'json-open' },
+      { type: 'kv', k: '"sla_target"', v: '"99.9%"' },
+      { type: 'kv', k: '"sla_actual"', v: '"99.95%"', ok: true },
+      { type: 'kv', k: '"mttr_p50"',   v: '"8m"' },
+      { type: 'kv', k: '"error_budget_left"', v: '"67%"', ok: true },
+      { type: 'kv', k: '"last_incident"',     v: '"14d ago"' },
+      { type: 'json-close' },
+      { type: 'out', text: '' },
+      { type: 'ok',  text: '✓ within error budget' },
+    ],
+    deploy: [
+      { type: 'cmd',  text: './deploy.sh --env=prod --service=checkout' },
+      { type: 'step', ok: true,  text: 'lint + test passed' },
+      { type: 'step', ok: true,  text: 'image built · ghcr.io/...@sha256:f8a2' },
+      { type: 'step', ok: true,  text: 'argocd sync · 42 manifests' },
+      { type: 'step', ok: true,  text: 'canary 5% → 25% → 100%' },
+      { type: 'step', ok: true,  text: 'healthcheck green' },
+      { type: 'out',  text: '' },
+      { type: 'ok',   text: '✓ deployed in 2m 47s · 0 errors' },
+    ],
+    whoami: [
+      { type: 'cmd', text: 'whoami --verbose' },
+      { type: 'kv-plain', k: 'name',    v: 'Sergey T.' },
+      { type: 'kv-plain', k: 'role',    v: 'Senior DevOps / MLOps Engineer' },
+      { type: 'kv-plain', k: 'since',   v: '2019 · 7+ years in the trenches' },
+      { type: 'kv-plain', k: 'tz',      v: 'UTC+3 · remote-first' },
+      { type: 'kv-plain', k: 'contact', v: '@sersert on Telegram' },
+      { type: 'out', text: '' },
+      { type: 'comment', text: '# available for new clients · Q2 2026' },
+    ],
+  };
+
+  const termBody = document.getElementById('termBody');
+  const tabs = document.querySelectorAll('.term-tab');
+
+  let currentRun = 0;
+  let currentTyper = null;
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function promptHtml() {
+    return `<span class="t-prompt-sym">❯</span> <span class="t-user">sergey</span><span class="t-at">@</span><span class="t-host">prod</span> <span class="t-path">~</span> $`;
+  }
+
+  function renderLine(item) {
+    const el = document.createElement('div');
+    el.className = 't-line';
+    switch (item.type) {
+      case 'cmd': {
+        el.innerHTML = `${promptHtml()} <span class="t-cmd"></span>`;
+        break;
+      }
+      case 'hdr': el.innerHTML = `<span class="t-out">${esc(item.text)}</span>`; break;
+      case 'node': {
+        const name = `<span class="t-val">${esc(item.name.padEnd(14))}</span>`;
+        const status = `<span class="t-ok">Ready  </span>`;
+        const role = `<span class="t-out">${esc(item.role.padEnd(15))}</span>`;
+        const age = `<span class="t-out">${esc(item.age.padStart(5))}</span>`;
+        const ver = `<span class="t-out">  v1.30.14</span>`;
+        el.innerHTML = `${name} ${status} ${role} ${age}${ver}`;
+        break;
+      }
+      case 'out': el.innerHTML = `<span class="t-out">${esc(item.text)}</span>`; break;
+      case 'ok': el.innerHTML = `<span class="t-ok">${esc(item.text)}</span>`; break;
+      case 'warn': el.innerHTML = `<span class="t-warn">${esc(item.text)}</span>`; break;
+      case 'comment': el.innerHTML = `<span class="t-comment">${esc(item.text)}</span>`; break;
+      case 'json-open': el.innerHTML = `<span class="t-out">{</span>`; break;
+      case 'json-close': el.innerHTML = `<span class="t-out">}</span>`; break;
+      case 'kv': {
+        const okClass = item.ok ? 't-ok' : 't-val';
+        el.innerHTML = `<span class="t-out">  </span><span class="t-val">${esc(item.k)}</span><span class="t-out">: </span><span class="${okClass}">${esc(item.v)}</span><span class="t-out">,</span>`;
+        break;
+      }
+      case 'kv-plain': {
+        el.innerHTML = `<span class="t-val">${esc(item.k.padEnd(8))}</span><span class="t-out">=</span> <span class="t-str">"${esc(item.v)}"</span>`;
+        break;
+      }
+      case 'step': {
+        const mark = item.ok ? '<span class="t-ok">✓</span>' : '<span class="t-warn">!</span>';
+        el.innerHTML = `${mark} <span class="t-out">${esc(item.text)}</span>`;
+        break;
+      }
+    }
+    return el;
+  }
+
+  async function typeInto(cmdEl, text) {
+    return new Promise((resolve) => {
+      let i = 0;
+      currentTyper = setInterval(() => {
+        cmdEl.textContent = text.slice(0, i++);
+        if (i > text.length) { clearInterval(currentTyper); currentTyper = null; resolve(); }
+      }, 22);
+    });
+  }
+
+  async function playScript(key) {
+    const runId = ++currentRun;
+    if (currentTyper) { clearInterval(currentTyper); currentTyper = null; }
+    termBody.innerHTML = '';
+
+    const script = scripts[key];
+    for (let i = 0; i < script.length; i++) {
+      if (runId !== currentRun) return;
+      const item = script[i];
+      const line = renderLine(item);
+      termBody.appendChild(line);
+
+      if (item.type === 'cmd') {
+        const cmdSpan = line.querySelector('.t-cmd');
+        await typeInto(cmdSpan, item.text);
+        await sleep(120);
+      } else {
+        await sleep(item.type === 'out' ? 60 : (item.type === 'ok' ? 260 : 90));
+      }
+    }
+
+    if (runId !== currentRun) return;
+    const cursorLine = document.createElement('div');
+    cursorLine.className = 't-line';
+    cursorLine.innerHTML = `${promptHtml()} <span class="t-cursor"></span>`;
+    termBody.appendChild(cursorLine);
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  tabs.forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      playScript(t.dataset.cmd);
+    });
+  });
+
+  // Auto-cycle tabs on idle
+  let autoCycleTimer = null;
+  function scheduleAutoCycle() {
+    clearTimeout(autoCycleTimer);
+    autoCycleTimer = setTimeout(() => {
+      const active = document.querySelector('.term-tab.active');
+      const all = Array.from(tabs);
+      const next = all[(all.indexOf(active) + 1) % all.length];
+      next.click();
+      scheduleAutoCycle();
+    }, 7000);
+  }
+
+  playScript('nodes');
+  scheduleAutoCycle();
+
+  /* ============ SCROLL REVEAL ============ */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('shown');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+    io.observe(el);
+  });
+
+  /* ============ EXPERIENCE EDIT MODE ============ */
+  const STORAGE_KEY = 'sergey_exp_edits_v1';
+  const editFab = document.getElementById('editFab');
+  const editHint = document.getElementById('editHint');
+  const editReset = document.getElementById('editReset');
+  const editFabLabel = editFab.querySelector('.edit-fab-label');
+
+  function editableFields() {
+    return document.querySelectorAll('#expGrid [data-edit]');
+  }
+
+  function fieldKey(el) {
+    // stable path: card index + kind + (for metric) sibling index
+    const card = el.closest('.exp-card');
+    const cardIdx = [...document.querySelectorAll('#expGrid .exp-card')].indexOf(card);
+    const kind = el.dataset.edit;
+    if (kind === 'metric') {
+      const siblings = [...card.querySelectorAll('[data-edit="metric"]')];
+      return `c${cardIdx}:metric:${siblings.indexOf(el)}`;
+    }
+    return `c${cardIdx}:${kind}`;
+  }
+
+  function loadEdits() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+
+  function saveEdits(edits) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(edits));
+  }
+
+  function applyStoredEdits() {
+    const edits = loadEdits();
+    editableFields().forEach(el => {
+      const k = fieldKey(el);
+      if (edits[k] !== undefined) el.innerHTML = edits[k];
+    });
+  }
+
+  function captureEdits() {
+    const edits = loadEdits();
+    editableFields().forEach(el => {
+      const k = fieldKey(el);
+      edits[k] = el.innerHTML.trim();
+    });
+    saveEdits(edits);
+  }
+
+  let editOn = false;
+  function setEditMode(on) {
+    editOn = on;
+    document.body.classList.toggle('editing', on);
+    editFab.classList.toggle('active', on);
+    editHint.classList.toggle('show', on);
+    editFabLabel.textContent = on ? 'done' : 'edit';
+    editableFields().forEach(el => {
+      if (on) {
+        el.setAttribute('contenteditable', 'plaintext-only');
+        el.setAttribute('spellcheck', 'false');
+      } else {
+        el.removeAttribute('contenteditable');
+        el.removeAttribute('spellcheck');
+      }
+    });
+    if (!on) captureEdits();
+  }
+
+  editFab.addEventListener('click', () => setEditMode(!editOn));
+
+  // Live-save on blur too
+  document.addEventListener('focusout', (e) => {
+    if (editOn && e.target.matches('[data-edit]')) captureEdits();
+  });
+
+  // Keep Enter from splitting into <div>/<br> — insert a space instead for most fields
+  document.addEventListener('keydown', (e) => {
+    if (!editOn) return;
+    if (!e.target.matches('[data-edit]')) return;
+    if (e.key === 'Enter') {
+      // allow newlines only in summary
+      if (e.target.dataset.edit !== 'summary') { e.preventDefault(); }
+    }
+    if (e.key === 'Escape') { e.target.blur(); setEditMode(false); }
+  });
+
+  editReset.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!confirm('Сбросить все правки и вернуть исходный текст?')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  });
+
+  // Apply on load
+  applyStoredEdits();
+</script>
+</body>
+</html>
